@@ -1,0 +1,6 @@
+llama_parse
+pandas
+io 
+re
+tempfile
+os
