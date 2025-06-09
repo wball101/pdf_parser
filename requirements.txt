@@ -1,2 +1,3 @@
 llama_parse
 pandas
+openpyxl
