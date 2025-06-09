@@ -5,6 +5,7 @@ import re
 from io import StringIO
 import tempfile
 import os
+import openpyxl
 
 def extract_markdown_tables(text: str):
     tables = []
