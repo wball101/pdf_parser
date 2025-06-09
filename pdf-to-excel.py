@@ -1,7 +1,6 @@
 import streamlit as st
 from llama_parse import LlamaParse
 import pandas as pd
-from io import StringIO
 import re
 import tempfile
 import os
@@ -9,11 +8,22 @@ import os
 def extract_markdown_tables(text: str):
     tables = []
     pattern = re.compile(
-        r"\|(?:[^\n|]+\|)+\n\|(?:[-: ]+\|)+\n(?:\|(?:[^\n|]+\|)+\n?)+", re.MULTILINE)
+    r"\|(?:[^\n|]+\|)+\n\|(?:[-: ]+\|)+\n(?:\|(?:[^\n|]+\|)+\n?)+", re.MULTILINE)
     matches = pattern.findall(text)
     for i, match in enumerate(matches):
         try:
-            df = pd.read_csv(StringIO(match), sep="|", engine="python")
+            # Split the match into lines and strip whitespace
+            lines = [line.strip() for line in match.strip().split('\n') if line.strip()]
+            # Remove the separator line (usually the second line)
+            if len(lines) > 2:
+                header = [col.strip() for col in lines[0].split('|')[1:-1]]
+                data = [
+                    [cell.strip() for cell in row.split('|')[1:-1]]
+                    for row in lines[2:]
+                ]
+                df = pd.DataFrame(data, columns=header)
+        except Exception as e:
+            print(f"Error parsing table {i}: {e}")
             df = df.dropna(axis=1, how="all")
             df.columns = df.columns.str.strip()
             df = df[1:]  # Remove possible duplicate header
