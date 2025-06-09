@@ -1,6 +1,6 @@
 llama_parse
 pandas
-io 
+StringIO
 re
 tempfile
 os
