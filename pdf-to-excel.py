@@ -28,7 +28,6 @@ def parse_pdf_with_llamacloud(pdf_path, output_excel_path, api_key=None):
         result_type='markdown')
     documents = parser.load_data(pdf_path)
     all_text = "\n".join(doc.text for doc in documents)
-    print(all_text)
     tables = extract_markdown_tables(all_text)
     if not tables:
         raise ValueError("No tables found in the parsed document.")
